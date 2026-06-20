@@ -8,140 +8,751 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      background: #0f1117;
+      background: linear-gradient(135deg, #0a0e17 0%, #0f1117 50%, #0d1420 100%);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: #fff;
       min-height: 100vh;
     }
 
-    .site { max-width: 900px; margin: 0 auto; background: #16181f; }
+    .site { 
+      max-width: 100%;
+      margin: 0;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
     /* HEADER */
     .header {
-      background: #16181f;
-      padding: 20px 32px;
+      background: rgba(22, 24, 31, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 24px 48px;
       display: flex;
       align-items: center;
-      gap: 16px;
-      border-bottom: 0.5px solid rgba(255,255,255,0.1);
+      gap: 20px;
+      border-bottom: 1px solid rgba(126, 184, 232, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: all 0.3s ease;
     }
-    .logo-img { width: 56px; height: 56px; object-fit: contain; }
-    .logo-text { display: flex; flex-direction: column; gap: 2px; }
-    .logo-text .line1 { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; }
-    .logo-text .line2 { font-size: 15px; font-weight: 500; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; }
+    
+    .logo-img { 
+      width: 64px; 
+      height: 64px; 
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    
+    .header:hover .logo-img {
+      transform: scale(1.05);
+    }
+    
+    .logo-text { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 2px; 
+    }
+    
+    .logo-text .line1 { 
+      font-size: 11px; 
+      font-weight: 400; 
+      color: rgba(126, 184, 232, 0.8); 
+      letter-spacing: 0.12em; 
+      text-transform: uppercase; 
+    }
+    
+    .logo-text .line2 { 
+      font-size: 16px; 
+      font-weight: 600; 
+      color: #fff; 
+      letter-spacing: 0.06em; 
+      text-transform: uppercase; 
+    }
 
     /* TABS */
-    .horizon-nav { background: #16181f; padding: 0 32px; position: relative; }
-    .horizon-line { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.15); }
-    .tabs { display: flex; gap: 0; }
-    .tab-btn {
-      background: none; border: none;
-      color: rgba(255,255,255,0.7);
-      font-size: 13px; letter-spacing: 0.03em;
-      padding: 16px 24px 0;
-      cursor: pointer; position: relative;
-      font-family: inherit; transition: color 0.2s; white-space: nowrap;
+    .horizon-nav { 
+      background: rgba(22, 24, 31, 0.6);
+      padding: 0 48px;
+      position: relative;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      overflow-x: auto;
     }
-    .tab-btn:hover { color: #fff; }
-    .tab-btn.active { color: #fff; }
+    
+    .tabs { 
+      display: flex; 
+      gap: 0;
+      min-width: fit-content;
+    }
+    
+    .tab-btn {
+      background: none; 
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px; 
+      letter-spacing: 0.03em;
+      padding: 16px 28px;
+      cursor: pointer; 
+      position: relative;
+      font-family: inherit; 
+      transition: all 0.3s ease; 
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    
+    .tab-btn:hover { 
+      color: #fff;
+      background: rgba(126, 184, 232, 0.05);
+    }
+    
+    .tab-btn.active { 
+      color: #7eb8e8;
+    }
 
-    /* Ancla náutica como indicador de pestaña activa */
     .tab-btn .anchor-mark {
       display: block;
-      margin: 8px auto 0;
-      width: 12px; height: 12px;
+      margin: 10px auto 0;
+      width: 14px; 
+      height: 14px;
       opacity: 0.2;
-      transition: opacity 0.2s;
+      transition: opacity 0.3s ease;
     }
-    .tab-btn.active .anchor-mark { opacity: 1; }
+    
+    .tab-btn.active .anchor-mark { 
+      opacity: 1;
+      animation: bounce 0.6s ease;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    
     .tab-btn.active::after {
       content: '';
       position: absolute;
-      bottom: 0; left: 50%;
+      bottom: -1px;
+      left: 50%;
       transform: translateX(-50%);
-      width: 1px; height: 10px;
-      background: #7eb8e8;
+      width: 24px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #7eb8e8, transparent);
+      border-radius: 2px;
+      animation: slideIn 0.4s ease;
+    }
+    
+    @keyframes slideIn {
+      from { width: 0; opacity: 0; }
+      to { width: 24px; opacity: 1; }
     }
 
     /* CONTENT */
-    .content { background: #1c1f2b; }
-    .panel { display: none; padding: 36px 32px; }
-    .panel.active { display: block; }
+    .content { 
+      background: transparent;
+      flex: 1;
+      padding: 0;
+    }
+    
+    .panel { 
+      display: none; 
+      padding: 56px 48px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .panel.active { 
+      display: block; 
+    }
 
     /* HERO */
     .hero-inner {
-      background: #16181f;
-      margin: -36px -32px 32px;
-      padding: 48px 32px 36px;
+      background: linear-gradient(135deg, rgba(126, 184, 232, 0.08), rgba(126, 184, 232, 0.03));
+      border: 1px solid rgba(126, 184, 232, 0.15);
+      border-radius: 16px;
+      margin: 0 0 48px 0;
+      padding: 72px 56px;
       text-align: center;
-      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
     }
-    .eyebrow { font-size: 11px; color: #7eb8e8; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
-    .hero-inner h1 { font-size: 32px; font-weight: 400; color: #fff; line-height: 1.3; margin-bottom: 12px; }
-    .hero-inner .lead { font-size: 14px; color: rgba(255,255,255,0.7); max-width: 420px; margin: 0 auto 28px; line-height: 1.75; }
-    .hero-btn { background: #7eb8e8; color: #0f1117; border: none; border-radius: 8px; padding: 11px 26px; font-size: 14px; font-weight: 600; cursor: pointer; margin: 0 6px; font-family: inherit; }
-    .hero-btn-o { background: transparent; color: #7eb8e8; border: 1px solid #7eb8e8; border-radius: 8px; padding: 11px 26px; font-size: 14px; cursor: pointer; margin: 0 6px; font-family: inherit; }
-    .hero-btn:hover { background: #a0ccf0; }
-    .hero-btn-o:hover { background: rgba(126,184,232,0.1); }
+    
+    .hero-inner:hover {
+      background: linear-gradient(135deg, rgba(126, 184, 232, 0.12), rgba(126, 184, 232, 0.06));
+      border-color: rgba(126, 184, 232, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    .eyebrow { 
+      font-size: 12px; 
+      color: #7eb8e8; 
+      letter-spacing: 0.12em; 
+      text-transform: uppercase; 
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    
+    .hero-inner h1 { 
+      font-size: 48px; 
+      font-weight: 700; 
+      color: #fff; 
+      line-height: 1.2; 
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 0%, #b0d4f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-inner .lead { 
+      font-size: 16px; 
+      color: rgba(255, 255, 255, 0.8); 
+      max-width: 520px; 
+      margin: 0 auto 32px; 
+      line-height: 1.8;
+      font-weight: 400;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .hero-btn, .hero-btn-o { 
+      border: none; 
+      border-radius: 10px; 
+      padding: 14px 32px; 
+      font-size: 15px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      font-family: inherit;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    
+    .hero-btn { 
+      background: linear-gradient(135deg, #7eb8e8 0%, #5fa0d6 100%);
+      color: #0f1117;
+      box-shadow: 0 8px 24px rgba(126, 184, 232, 0.3);
+    }
+    
+    .hero-btn:hover { 
+      background: linear-gradient(135deg, #a0ccf0 0%, #7eb8e8 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(126, 184, 232, 0.4);
+    }
+    
+    .hero-btn-o { 
+      background: transparent; 
+      color: #7eb8e8; 
+      border: 1.5px solid #7eb8e8;
+    }
+    
+    .hero-btn-o:hover { 
+      background: rgba(126, 184, 232, 0.15);
+      border-color: #a0ccf0;
+      color: #a0ccf0;
+      transform: translateY(-2px);
+    }
 
     /* FOTOS */
-    .photo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 36px; }
-    .photo-grid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; display: block; }
+    .photo-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 20px; 
+      margin-bottom: 56px;
+    }
+    
+    .photo-grid img { 
+      width: 100%; 
+      aspect-ratio: 1/1; 
+      object-fit: cover; 
+      border-radius: 14px; 
+      display: block;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(126, 184, 232, 0.2);
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    
+    .photo-grid img:hover {
+      transform: scale(1.05);
+      border-color: rgba(126, 184, 232, 0.5);
+      box-shadow: 0 16px 40px rgba(126, 184, 232, 0.2);
+    }
 
     /* INFO CARDS */
-    .slabel { font-size: 10px; color: #7eb8e8; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
-    .stitle { font-size: 18px; font-weight: 400; color: #fff; margin-bottom: 20px; }
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-    .info-card { background: #222636; border: 0.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 18px; }
-    .info-card .icon { font-size: 22px; color: #7eb8e8; margin-bottom: 10px; }
-    .info-card h3 { font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 6px; }
-    .info-card p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+    .slabel { 
+      font-size: 11px; 
+      color: #7eb8e8; 
+      letter-spacing: 0.1em; 
+      text-transform: uppercase; 
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    
+    .stitle { 
+      font-size: 32px; 
+      font-weight: 700; 
+      color: #fff; 
+      margin-bottom: 32px;
+      background: linear-gradient(135deg, #fff 0%, #b0d4f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      width: fit-content;
+    }
+    
+    .info-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 20px; 
+      margin-bottom: 40px;
+    }
+    
+    .info-card { 
+      background: linear-gradient(135deg, rgba(34, 38, 54, 0.8), rgba(34, 38, 54, 0.4));
+      border: 1px solid rgba(126, 184, 232, 0.2);
+      border-radius: 14px; 
+      padding: 28px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(126, 184, 232, 0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .info-card:hover {
+      background: linear-gradient(135deg, rgba(34, 38, 54, 1), rgba(34, 38, 54, 0.6));
+      border-color: rgba(126, 184, 232, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(126, 184, 232, 0.15);
+    }
+    
+    .info-card:hover::before {
+      opacity: 1;
+    }
+    
+    .info-card .icon { 
+      font-size: 28px; 
+      color: #7eb8e8; 
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .info-card:hover .icon {
+      transform: scale(1.1) rotate(10deg);
+    }
+    
+    .info-card h3 { 
+      font-size: 16px; 
+      font-weight: 600; 
+      color: #fff; 
+      margin-bottom: 10px;
+    }
+    
+    .info-card p { 
+      font-size: 14px; 
+      color: rgba(255, 255, 255, 0.75); 
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
 
     /* STEPS */
-    .step-block { margin-bottom: 32px; }
-    .step-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
-    .step-num { width: 28px; height: 28px; border-radius: 50%; border: 1px solid #7eb8e8; color: #7eb8e8; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-    .step-header h4 { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 4px; }
-    .step-header p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.55; }
-    .video-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: #0d0f15; margin-bottom: 4px; }
-    .video-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
-    .step-divider { border: none; border-top: 0.5px solid rgba(255,255,255,0.08); margin-bottom: 32px; }
+    .step-block { 
+      margin-bottom: 48px;
+      padding: 32px;
+      background: rgba(34, 38, 54, 0.4);
+      border: 1px solid rgba(126, 184, 232, 0.15);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    
+    .step-block:hover {
+      background: rgba(34, 38, 54, 0.6);
+      border-color: rgba(126, 184, 232, 0.3);
+    }
+    
+    .step-header { 
+      display: flex; 
+      align-items: flex-start; 
+      gap: 20px; 
+      margin-bottom: 20px;
+    }
+    
+    .step-num { 
+      width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      border: 2px solid #7eb8e8; 
+      color: #7eb8e8; 
+      font-size: 14px;
+      font-weight: 700;
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      flex-shrink: 0;
+      background: rgba(126, 184, 232, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .step-block:hover .step-num {
+      background: rgba(126, 184, 232, 0.2);
+      box-shadow: 0 0 16px rgba(126, 184, 232, 0.3);
+    }
+    
+    .step-header h4 { 
+      font-size: 17px; 
+      font-weight: 600; 
+      color: #fff; 
+      margin-bottom: 6px;
+    }
+    
+    .step-header p { 
+      font-size: 14px; 
+      color: rgba(255, 255, 255, 0.7); 
+      line-height: 1.6;
+    }
+    
+    .video-wrap { 
+      width: 100%; 
+      aspect-ratio: 16/9; 
+      border-radius: 12px; 
+      overflow: hidden; 
+      background: #0d0f15; 
+      margin-bottom: 8px;
+      border: 1px solid rgba(126, 184, 232, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .video-wrap:hover {
+      border-color: rgba(126, 184, 232, 0.4);
+    }
+    
+    .video-wrap iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      display: block;
+    }
+    
+    .step-divider { 
+      border: none; 
+      border-top: 1px solid rgba(126, 184, 232, 0.15); 
+      margin: 48px 0;
+    }
 
     /* RECURSOS */
-    .resource-row { display: flex; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
-    .resource-row:last-child { border-bottom: none; }
-    .res-icon { width: 38px; height: 38px; background: #222636; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .res-icon i { font-size: 18px; color: #7eb8e8; }
-    .res-info { flex: 1; }
-    .res-info .name { font-size: 14px; color: #fff; font-weight: 500; }
-    .res-info .meta { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 3px; }
-    .res-type { font-size: 12px; color: rgba(255,255,255,0.5); }
-    .res-link { font-size: 12px; color: #7eb8e8; text-decoration: none; }
-    .res-link:hover { text-decoration: underline; }
+    .resource-row { 
+      display: flex; 
+      gap: 16px; 
+      align-items: center; 
+      padding: 20px;
+      border-bottom: 1px solid rgba(126, 184, 232, 0.1);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .resource-row:last-child { 
+      border-bottom: none;
+    }
+    
+    .resource-row:hover {
+      background: rgba(126, 184, 232, 0.08);
+    }
+    
+    .res-icon { 
+      width: 44px; 
+      height: 44px; 
+      background: linear-gradient(135deg, rgba(126, 184, 232, 0.15), rgba(126, 184, 232, 0.05));
+      border-radius: 10px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      flex-shrink: 0;
+      border: 1px solid rgba(126, 184, 232, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .resource-row:hover .res-icon {
+      background: linear-gradient(135deg, rgba(126, 184, 232, 0.25), rgba(126, 184, 232, 0.1));
+      border-color: rgba(126, 184, 232, 0.4);
+    }
+    
+    .res-icon i { 
+      font-size: 20px; 
+      color: #7eb8e8;
+    }
+    
+    .res-info { 
+      flex: 1;
+    }
+    
+    .res-info .name { 
+      font-size: 15px; 
+      color: #fff; 
+      font-weight: 600;
+    }
+    
+    .res-info .meta { 
+      font-size: 13px; 
+      color: rgba(255, 255, 255, 0.6); 
+      margin-top: 4px;
+    }
+    
+    .res-type { 
+      font-size: 12px; 
+      color: rgba(126, 184, 232, 0.7);
+      background: rgba(126, 184, 232, 0.1);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    
+    .res-link { 
+      font-size: 13px; 
+      color: #7eb8e8; 
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    
+    .res-link:hover { 
+      color: #a0ccf0;
+      transform: translateX(4px);
+    }
 
     /* TIP BOX */
-    .tip-box { background: #1a2535; border-left: 2px solid #7eb8e8; border-radius: 0 8px 8px 0; padding: 14px 18px; margin-top: 24px; }
-    .tip-label { font-size: 10px; color: #7eb8e8; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
-    .tip-box p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.7; }
+    .tip-box { 
+      background: linear-gradient(135deg, rgba(26, 37, 53, 0.6), rgba(26, 37, 53, 0.3));
+      border-left: 4px solid #7eb8e8; 
+      border-radius: 8px; 
+      padding: 20px 24px; 
+      margin-top: 32px;
+      border: 1px solid rgba(126, 184, 232, 0.15);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .tip-box:hover {
+      background: linear-gradient(135deg, rgba(26, 37, 53, 0.8), rgba(26, 37, 53, 0.4));
+      border-left-width: 6px;
+    }
+    
+    .tip-label { 
+      font-size: 11px; 
+      color: #7eb8e8; 
+      letter-spacing: 0.08em; 
+      text-transform: uppercase; 
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    
+    .tip-box p { 
+      font-size: 14px; 
+      color: rgba(255, 255, 255, 0.85); 
+      line-height: 1.8;
+    }
 
     /* FOOTER */
-    .footer { background: #0f1117; padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; border-top: 0.5px solid rgba(255,255,255,0.1); }
-    .footer p { font-size: 12px; color: rgba(255,255,255,0.55); }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-links a { font-size: 12px; color: rgba(255,255,255,0.6); text-decoration: none; }
-    .footer-links a:hover { color: #7eb8e8; }
+    .footer { 
+      background: rgba(15, 17, 23, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 40px 48px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      border-top: 1px solid rgba(126, 184, 232, 0.15);
+      margin-top: auto;
+    }
+    
+    .footer p { 
+      font-size: 13px; 
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .footer-links { 
+      display: flex; 
+      gap: 24px;
+    }
+    
+    .footer-links a { 
+      font-size: 13px; 
+      color: rgba(255, 255, 255, 0.6); 
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .footer-links a:hover { 
+      color: #7eb8e8;
+      transform: translateY(-2px);
+    }
 
-    @media (max-width: 600px) {
-      .header { padding: 16px; }
-      .horizon-nav { padding: 0 16px; }
-      .tab-btn { padding: 14px 12px 0; font-size: 11px; }
-      .panel { padding: 24px 16px; }
-      .hero-inner { margin: -24px -16px 24px; padding: 32px 16px 24px; }
-      .info-grid { grid-template-columns: 1fr; }
-      .photo-grid { grid-template-columns: 1fr 1fr; }
-      .photo-grid img:last-child { display: none; }
-      .footer { flex-direction: column; gap: 12px; text-align: center; }
+    /* FOCUS STATES */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid #7eb8e8;
+      outline-offset: 2px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .header { 
+        padding: 16px 24px;
+      }
+      
+      .logo-img {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .logo-text .line2 {
+        font-size: 14px;
+      }
+      
+      .horizon-nav { 
+        padding: 0 24px;
+      }
+      
+      .tab-btn {
+        padding: 14px 16px;
+        font-size: 13px;
+      }
+      
+      .panel { 
+        padding: 36px 24px;
+      }
+      
+      .hero-inner {
+        padding: 48px 32px;
+        margin-bottom: 32px;
+      }
+      
+      .hero-inner h1 {
+        font-size: 36px;
+      }
+      
+      .hero-inner .lead {
+        font-size: 15px;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .hero-btn, .hero-btn-o {
+        width: 100%;
+      }
+      
+      .photo-grid { 
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .info-grid { 
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .stitle {
+        font-size: 24px;
+      }
+      
+      .step-block {
+        padding: 20px;
+        margin-bottom: 32px;
+      }
+      
+      .footer { 
+        flex-direction: column; 
+        gap: 16px; 
+        text-align: center;
+        padding: 32px 24px;
+      }
+      
+      .footer-links {
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header { 
+        padding: 12px 16px;
+        gap: 12px;
+      }
+      
+      .logo-img {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .logo-text .line1 {
+        font-size: 10px;
+      }
+      
+      .logo-text .line2 {
+        font-size: 12px;
+      }
+      
+      .tab-btn {
+        padding: 12px 12px;
+        font-size: 12px;
+      }
+      
+      .panel {
+        padding: 24px 16px;
+      }
+      
+      .hero-inner {
+        padding: 32px 20px;
+      }
+      
+      .hero-inner h1 {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+      
+      .hero-inner .lead {
+        font-size: 14px;
+      }
+      
+      .eyebrow {
+        font-size: 11px;
+      }
+      
+      .hero-btn, .hero-btn-o {
+        padding: 12px 24px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -149,82 +760,83 @@
 <div class="site">
 
   <header class="header">
-    <img class="logo-img" src="logo_vela_unc.png" alt="Logo UNC Vela">
+    <img class="logo-img" src="images/logo_vela_unc.png" alt="Logo UNC Vela">
     <div class="logo-text">
       <span class="line1">Escuela de Vela</span>
       <span class="line2">Universidad Nacional de Córdoba</span>
     </div>
   </header>
 
-  <nav class="horizon-nav" aria-label="Secciones">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="showTab('info',this)">
+  <nav class="horizon-nav" aria-label="Secciones principales">
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" onclick="showTab('info',this)" role="tab" aria-selected="true" aria-controls="tab-info">
         Información general
         <svg class="anchor-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="12" cy="5" r="2.5" stroke="#7eb8e8" stroke-width="1.8"/>
-          <line x1="12" y1="7.5" x2="12" y2="20" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
-          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="12" cy="5" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="12" y1="7.5" x2="12" y2="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
         </svg>
       </button>
-      <button class="tab-btn" onclick="showTab('pampero',this)">
+      <button class="tab-btn" onclick="showTab('pampero',this)" role="tab" aria-selected="false" aria-controls="tab-pampero">
         Cómo armar un Pampero
         <svg class="anchor-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="12" cy="5" r="2.5" stroke="#7eb8e8" stroke-width="1.8"/>
-          <line x1="12" y1="7.5" x2="12" y2="20" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
-          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="12" cy="5" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="12" y1="7.5" x2="12" y2="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
         </svg>
       </button>
-      <button class="tab-btn" onclick="showTab('biblio',this)">
+      <button class="tab-btn" onclick="showTab('biblio',this)" role="tab" aria-selected="false" aria-controls="tab-biblio">
         Bibliografía y podcasts
         <svg class="anchor-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="12" cy="5" r="2.5" stroke="#7eb8e8" stroke-width="1.8"/>
-          <line x1="12" y1="7.5" x2="12" y2="20" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
-          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="12" cy="5" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+          <line x1="12" y1="7.5" x2="12" y2="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
         </svg>
       </button>
     </div>
-    <div class="horizon-line" aria-hidden="true"></div>
   </nav>
 
   <main class="content">
 
-    <section id="tab-info" class="panel active">
+    <section id="tab-info" class="panel active" role="tabpanel" aria-labelledby="tab-info-btn">
       <div class="hero-inner">
         <p class="eyebrow">Navegación a vela · Córdoba</p>
         <h1>Navegá con<br>el viento del sur</h1>
         <p class="lead">Formación completa en navegación a vela para estudiantes y comunidad universitaria. Teoría, práctica y travesías en el Embalse Los Molinos.</p>
-        <button class="hero-btn">Ver el programa</button>
-        <button class="hero-btn-o">Inscribirse</button>
+        <div class="hero-buttons">
+          <button class="hero-btn" aria-label="Ver el programa de navegación a vela">Ver el programa</button>
+          <button class="hero-btn-o" aria-label="Inscribirse al curso de vela">Inscribirse</button>
+        </div>
       </div>
 
       <div class="photo-grid">
-        <img src="images/imagen_izando_vela.jpg" alt="Alumnos izando la vela">
-        <img src="images/imagen_dos_pamperos.jpg" alt="Dos Pamperos navegando">
-        <img src="images/pampero_solo.jpg" alt="Pampero navegando en el embalse">
+        <img src="images/imagen_izando_vela.jpg" alt="Alumnos izando la vela durante la práctica">
+        <img src="images/imagen_dos_pamperos.jpg" alt="Dos Pamperos navegando en el embalse">
+        <img src="images/pampero_solo.jpg" alt="Pampero navegando en el Embalse Los Molinos">
       </div>
 
       <p class="slabel">El curso</p>
       <h2 class="stitle">¿Qué vas a aprender?</h2>
       <div class="info-grid">
-        <div class="info-card">
+        <div class="info-card" tabindex="0">
           <i class="ti ti-wind icon" aria-hidden="true"></i>
           <h3>Teoría náutica</h3>
           <p>Meteorología, vientos regionales y lectura de cartas de navegación.</p>
         </div>
-        <div class="info-card">
+        <div class="info-card" tabindex="0">
           <i class="ti ti-compass icon" aria-hidden="true"></i>
           <h3>Maniobras</h3>
           <p>Viradas, trasluchadas, fondeo y maniobras de emergencia en agua.</p>
         </div>
-        <div class="info-card">
+        <div class="info-card" tabindex="0">
           <i class="ti ti-anchor icon" aria-hidden="true"></i>
           <h3>Prácticas en el lago</h3>
           <p>Salidas reales con instructor en el Embalse Los Molinos.</p>
         </div>
-        <div class="info-card">
+        <div class="info-card" tabindex="0">
           <i class="ti ti-certificate icon" aria-hidden="true"></i>
           <h3>Certificación</h3>
           <p>Certificado universitario al finalizar el curso completo.</p>
@@ -236,43 +848,43 @@
       </div>
     </section>
 
-    <section id="tab-pampero" class="panel">
+    <section id="tab-pampero" class="panel" role="tabpanel" aria-labelledby="tab-pampero-btn">
       <p class="slabel">Guía práctica</p>
       <h2 class="stitle">Cómo armar un Pampero</h2>
 
       <div class="step-block">
-        <div class="step-header"><div class="step-num">1</div><div><h4>Preparar el casco</h4><p>Revisá el casco, timón y orza antes de comenzar.</p></div></div>
-        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Preparar el casco" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="step-header"><div class="step-num" aria-label="Paso 1">1</div><div><h4>Preparar el casco</h4><p>Revisá el casco, timón y orza antes de comenzar.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Video: Preparar el casco del Pampero" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
       </div>
-      <hr class="step-divider">
+      <hr class="step-divider" aria-hidden="true">
 
       <div class="step-block">
-        <div class="step-header"><div class="step-num">2</div><div><h4>Instalar el mástil</h4><p>Colocá el mástil y aseguralo con obenques y estay de proa.</p></div></div>
-        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Instalar el mástil" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="step-header"><div class="step-num" aria-label="Paso 2">2</div><div><h4>Instalar el mástil</h4><p>Colocá el mástil y aseguralo con obenques y estay de proa.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Video: Instalar el mástil del Pampero" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
       </div>
-      <hr class="step-divider">
+      <hr class="step-divider" aria-hidden="true">
 
       <div class="step-block">
-        <div class="step-header"><div class="step-num">3</div><div><h4>Montar la botavara</h4><p>Enganchá la botavara al mástil y verificá el kicker.</p></div></div>
-        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Montar la botavara" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="step-header"><div class="step-num" aria-label="Paso 3">3</div><div><h4>Montar la botavara</h4><p>Enganchá la botavara al mástil y verificá el kicker.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Video: Montar la botavara del Pampero" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
       </div>
-      <hr class="step-divider">
+      <hr class="step-divider" aria-hidden="true">
 
       <div class="step-block">
-        <div class="step-header"><div class="step-num">4</div><div><h4>Largar la vela mayor</h4><p>Enfundá el grátil, fijá el puño de amura y tensá la driza.</p></div></div>
-        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Largar la vela mayor" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="step-header"><div class="step-num" aria-label="Paso 4">4</div><div><h4>Largar la vela mayor</h4><p>Enfundá el grátil, fijá el puño de amura y tensá la driza.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Video: Largar la vela mayor del Pampero" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
       </div>
-      <hr class="step-divider">
+      <hr class="step-divider" aria-hidden="true">
 
       <div class="step-block">
-        <div class="step-header"><div class="step-num">5</div><div><h4>Ajustar escotas y controles</h4><p>Pasá la escota, ajustá el cunningham y la trapa.</p></div></div>
-        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Ajustar escotas" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="step-header"><div class="step-num" aria-label="Paso 5">5</div><div><h4>Ajustar escotas y controles</h4><p>Pasá la escota, ajustá el cunningham y la trapa.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Video: Ajustar escotas y controles del Pampero" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
       </div>
-      <hr class="step-divider">
+      <hr class="step-divider" aria-hidden="true">
 
       <div class="step-block">
-        <div class="step-header"><div class="step-num">6</div><div><h4>Verificación final</h4><p>Comprobá EPP, nivel de agua y condición del viento.</p></div></div>
-        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Verificación final" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="step-header"><div class="step-num" aria-label="Paso 6">6</div><div><h4>Verificación final</h4><p>Comprobá EPP, nivel de agua y condición del viento.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Video: Verificación final del Pampero" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
       </div>
 
       <div class="tip-box">
@@ -281,7 +893,7 @@
       </div>
     </section>
 
-    <section id="tab-biblio" class="panel">
+    <section id="tab-biblio" class="panel" role="tabpanel" aria-labelledby="tab-biblio-btn">
       <p class="slabel">Recursos</p>
       <h2 class="stitle">Bibliografía recomendada</h2>
 
@@ -301,23 +913,23 @@
         <span class="res-type">Libro</span>
       </div>
 
-      <p class="slabel" style="margin-top:28px;">Podcasts</p>
-      <h2 class="stitle">Para escuchar navegando</h2>
+      <p class="slabel" style="margin-top:32px;">Podcasts</p>
+      <h2 class="stitle" style="margin-bottom:24px;">Para escuchar navegando</h2>
 
       <div class="resource-row">
         <div class="res-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
         <div class="res-info"><p class="name">Sailing Podcast · Around the World</p><p class="meta">Episodios semanales · EN</p></div>
-        <a class="res-link" href="#">Escuchar</a>
+        <a class="res-link" href="#" aria-label="Escuchar Sailing Podcast Around the World">Escuchar</a>
       </div>
       <div class="resource-row">
         <div class="res-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
         <div class="res-info"><p class="name">Pasión por la Vela</p><p class="meta">Podcast en español · regatistas y travesías</p></div>
-        <a class="res-link" href="#">Escuchar</a>
+        <a class="res-link" href="#" aria-label="Escuchar Pasión por la Vela">Escuchar</a>
       </div>
       <div class="resource-row">
         <div class="res-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
         <div class="res-info"><p class="name">The Sailing Scuttlebutt</p><p class="meta">Noticias y entrevistas · EN</p></div>
-        <a class="res-link" href="#">Escuchar</a>
+        <a class="res-link" href="#" aria-label="Escuchar The Sailing Scuttlebutt">Escuchar</a>
       </div>
 
       <div class="tip-box">
@@ -331,9 +943,9 @@
   <footer class="footer">
     <p>© 2026 UNC · Navegación a Vela</p>
     <div class="footer-links">
-      <a href="#">Instagram</a>
-      <a href="#">WhatsApp</a>
-      <a href="#">Contacto</a>
+      <a href="#" aria-label="Seguir en Instagram">Instagram</a>
+      <a href="#" aria-label="Contactar por WhatsApp">WhatsApp</a>
+      <a href="#" aria-label="Contacto">Contacto</a>
     </div>
   </footer>
 
@@ -341,9 +953,13 @@
 <script>
   function showTab(name, btn) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
     document.getElementById('tab-' + name).classList.add('active');
     btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
   }
 </script>
 </body>
