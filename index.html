@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNC · Navegación a Vela</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f1117;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .site { max-width: 900px; margin: 0 auto; background: #16181f; }
+
+    /* HEADER */
+    .header {
+      background: #16181f;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    }
+    .logo-img { width: 56px; height: 56px; object-fit: contain; }
+    .logo-text { display: flex; flex-direction: column; gap: 2px; }
+    .logo-text .line1 { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.65); letter-spacing: 0.12em; text-transform: uppercase; }
+    .logo-text .line2 { font-size: 15px; font-weight: 500; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* TABS */
+    .horizon-nav { background: #16181f; padding: 0 32px; position: relative; }
+    .horizon-line { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.15); }
+    .tabs { display: flex; gap: 0; }
+    .tab-btn {
+      background: none; border: none;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px; letter-spacing: 0.03em;
+      padding: 16px 24px 0;
+      cursor: pointer; position: relative;
+      font-family: inherit; transition: color 0.2s; white-space: nowrap;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active { color: #fff; }
+
+    /* Ancla náutica como indicador de pestaña activa */
+    .tab-btn .anchor-mark {
+      display: block;
+      margin: 8px auto 0;
+      width: 12px; height: 12px;
+      opacity: 0.2;
+      transition: opacity 0.2s;
+    }
+    .tab-btn.active .anchor-mark { opacity: 1; }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 1px; height: 10px;
+      background: #7eb8e8;
+    }
+
+    /* CONTENT */
+    .content { background: #1c1f2b; }
+    .panel { display: none; padding: 36px 32px; }
+    .panel.active { display: block; }
+
+    /* HERO */
+    .hero-inner {
+      background: #16181f;
+      margin: -36px -32px 32px;
+      padding: 48px 32px 36px;
+      text-align: center;
+      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    }
+    .eyebrow { font-size: 11px; color: #7eb8e8; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
+    .hero-inner h1 { font-size: 32px; font-weight: 400; color: #fff; line-height: 1.3; margin-bottom: 12px; }
+    .hero-inner .lead { font-size: 14px; color: rgba(255,255,255,0.7); max-width: 420px; margin: 0 auto 28px; line-height: 1.75; }
+    .hero-btn { background: #7eb8e8; color: #0f1117; border: none; border-radius: 8px; padding: 11px 26px; font-size: 14px; font-weight: 600; cursor: pointer; margin: 0 6px; font-family: inherit; }
+    .hero-btn-o { background: transparent; color: #7eb8e8; border: 1px solid #7eb8e8; border-radius: 8px; padding: 11px 26px; font-size: 14px; cursor: pointer; margin: 0 6px; font-family: inherit; }
+    .hero-btn:hover { background: #a0ccf0; }
+    .hero-btn-o:hover { background: rgba(126,184,232,0.1); }
+
+    /* FOTOS */
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 36px; }
+    .photo-grid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; display: block; }
+
+    /* INFO CARDS */
+    .slabel { font-size: 10px; color: #7eb8e8; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+    .stitle { font-size: 18px; font-weight: 400; color: #fff; margin-bottom: 20px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+    .info-card { background: #222636; border: 0.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 18px; }
+    .info-card .icon { font-size: 22px; color: #7eb8e8; margin-bottom: 10px; }
+    .info-card h3 { font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+    .info-card p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+
+    /* STEPS */
+    .step-block { margin-bottom: 32px; }
+    .step-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; border: 1px solid #7eb8e8; color: #7eb8e8; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .step-header h4 { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+    .step-header p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.55; }
+    .video-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: #0d0f15; margin-bottom: 4px; }
+    .video-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+    .step-divider { border: none; border-top: 0.5px solid rgba(255,255,255,0.08); margin-bottom: 32px; }
+
+    /* RECURSOS */
+    .resource-row { display: flex; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .resource-row:last-child { border-bottom: none; }
+    .res-icon { width: 38px; height: 38px; background: #222636; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .res-icon i { font-size: 18px; color: #7eb8e8; }
+    .res-info { flex: 1; }
+    .res-info .name { font-size: 14px; color: #fff; font-weight: 500; }
+    .res-info .meta { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 3px; }
+    .res-type { font-size: 12px; color: rgba(255,255,255,0.5); }
+    .res-link { font-size: 12px; color: #7eb8e8; text-decoration: none; }
+    .res-link:hover { text-decoration: underline; }
+
+    /* TIP BOX */
+    .tip-box { background: #1a2535; border-left: 2px solid #7eb8e8; border-radius: 0 8px 8px 0; padding: 14px 18px; margin-top: 24px; }
+    .tip-label { font-size: 10px; color: #7eb8e8; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+    .tip-box p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.7; }
+
+    /* FOOTER */
+    .footer { background: #0f1117; padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; border-top: 0.5px solid rgba(255,255,255,0.1); }
+    .footer p { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 12px; color: rgba(255,255,255,0.6); text-decoration: none; }
+    .footer-links a:hover { color: #7eb8e8; }
+
+    @media (max-width: 600px) {
+      .header { padding: 16px; }
+      .horizon-nav { padding: 0 16px; }
+      .tab-btn { padding: 14px 12px 0; font-size: 11px; }
+      .panel { padding: 24px 16px; }
+      .hero-inner { margin: -24px -16px 24px; padding: 32px 16px 24px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .photo-grid { grid-template-columns: 1fr 1fr; }
+      .photo-grid img:last-child { display: none; }
+      .footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="site">
+
+  <header class="header">
+    <img class="logo-img" src="logo_vela_unc.png" alt="Logo UNC Vela">
+    <div class="logo-text">
+      <span class="line1">Escuela de Vela</span>
+      <span class="line2">Universidad Nacional de Córdoba</span>
+    </div>
+  </header>
+
+  <nav class="horizon-nav" aria-label="Secciones">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('info',this)">
+        Información general
+        <svg class="anchor-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="5" r="2.5" stroke="#7eb8e8" stroke-width="1.8"/>
+          <line x1="12" y1="7.5" x2="12" y2="20" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="tab-btn" onclick="showTab('pampero',this)">
+        Cómo armar un Pampero
+        <svg class="anchor-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="5" r="2.5" stroke="#7eb8e8" stroke-width="1.8"/>
+          <line x1="12" y1="7.5" x2="12" y2="20" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="tab-btn" onclick="showTab('biblio',this)">
+        Bibliografía y podcasts
+        <svg class="anchor-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="5" r="2.5" stroke="#7eb8e8" stroke-width="1.8"/>
+          <line x1="12" y1="7.5" x2="12" y2="20" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 11.5 C6 17 9 20 12 20 C15 20 18 17 18 11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          <line x1="5" y1="11.5" x2="19" y2="11.5" stroke="#7eb8e8" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="horizon-line" aria-hidden="true"></div>
+  </nav>
+
+  <main class="content">
+
+    <section id="tab-info" class="panel active">
+      <div class="hero-inner">
+        <p class="eyebrow">Navegación a vela · Córdoba</p>
+        <h1>Navegá con<br>el viento del sur</h1>
+        <p class="lead">Formación completa en navegación a vela para estudiantes y comunidad universitaria. Teoría, práctica y travesías en el Embalse Los Molinos.</p>
+        <button class="hero-btn">Ver el programa</button>
+        <button class="hero-btn-o">Inscribirse</button>
+      </div>
+
+      <div class="photo-grid">
+        <img src="images/imagen_izando_vela.jpg" alt="Alumnos izando la vela">
+        <img src="images/imagen_dos_pamperos.jpg" alt="Dos Pamperos navegando">
+        <img src="images/pampero_solo.jpg" alt="Pampero navegando en el embalse">
+      </div>
+
+      <p class="slabel">El curso</p>
+      <h2 class="stitle">¿Qué vas a aprender?</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <i class="ti ti-wind icon" aria-hidden="true"></i>
+          <h3>Teoría náutica</h3>
+          <p>Meteorología, vientos regionales y lectura de cartas de navegación.</p>
+        </div>
+        <div class="info-card">
+          <i class="ti ti-compass icon" aria-hidden="true"></i>
+          <h3>Maniobras</h3>
+          <p>Viradas, trasluchadas, fondeo y maniobras de emergencia en agua.</p>
+        </div>
+        <div class="info-card">
+          <i class="ti ti-anchor icon" aria-hidden="true"></i>
+          <h3>Prácticas en el lago</h3>
+          <p>Salidas reales con instructor en el Embalse Los Molinos.</p>
+        </div>
+        <div class="info-card">
+          <i class="ti ti-certificate icon" aria-hidden="true"></i>
+          <h3>Certificación</h3>
+          <p>Certificado universitario al finalizar el curso completo.</p>
+        </div>
+      </div>
+      <div class="tip-box">
+        <p class="tip-label">Requisitos</p>
+        <p>No se requiere experiencia previa. Abierto a toda la comunidad UNC. Se requiere saber nadar.</p>
+      </div>
+    </section>
+
+    <section id="tab-pampero" class="panel">
+      <p class="slabel">Guía práctica</p>
+      <h2 class="stitle">Cómo armar un Pampero</h2>
+
+      <div class="step-block">
+        <div class="step-header"><div class="step-num">1</div><div><h4>Preparar el casco</h4><p>Revisá el casco, timón y orza antes de comenzar.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Preparar el casco" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      </div>
+      <hr class="step-divider">
+
+      <div class="step-block">
+        <div class="step-header"><div class="step-num">2</div><div><h4>Instalar el mástil</h4><p>Colocá el mástil y aseguralo con obenques y estay de proa.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Instalar el mástil" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      </div>
+      <hr class="step-divider">
+
+      <div class="step-block">
+        <div class="step-header"><div class="step-num">3</div><div><h4>Montar la botavara</h4><p>Enganchá la botavara al mástil y verificá el kicker.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Montar la botavara" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      </div>
+      <hr class="step-divider">
+
+      <div class="step-block">
+        <div class="step-header"><div class="step-num">4</div><div><h4>Largar la vela mayor</h4><p>Enfundá el grátil, fijá el puño de amura y tensá la driza.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Largar la vela mayor" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      </div>
+      <hr class="step-divider">
+
+      <div class="step-block">
+        <div class="step-header"><div class="step-num">5</div><div><h4>Ajustar escotas y controles</h4><p>Pasá la escota, ajustá el cunningham y la trapa.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Ajustar escotas" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      </div>
+      <hr class="step-divider">
+
+      <div class="step-block">
+        <div class="step-header"><div class="step-num">6</div><div><h4>Verificación final</h4><p>Comprobá EPP, nivel de agua y condición del viento.</p></div></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/wHqBY-aXgsc?si=mNQjElAkf27UeNWR" title="Verificación final" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+      </div>
+
+      <div class="tip-box">
+        <p class="tip-label">Consejo del instructor</p>
+        <p>Con viento del Pampero (SW), reforzá el obenque de barlovento antes de salir. El Pampero puede arreciar rápido en el Embalse.</p>
+      </div>
+    </section>
+
+    <section id="tab-biblio" class="panel">
+      <p class="slabel">Recursos</p>
+      <h2 class="stitle">Bibliografía recomendada</h2>
+
+      <div class="resource-row">
+        <div class="res-icon"><i class="ti ti-book" aria-hidden="true"></i></div>
+        <div class="res-info"><p class="name">Vela · Técnica y táctica</p><p class="meta">Paul Elvström · Clásico indispensable</p></div>
+        <span class="res-type">Libro</span>
+      </div>
+      <div class="resource-row">
+        <div class="res-icon"><i class="ti ti-book" aria-hidden="true"></i></div>
+        <div class="res-info"><p class="name">The Complete Sailing Manual</p><p class="meta">Steve Sleight · DK Publishing</p></div>
+        <span class="res-type">Libro</span>
+      </div>
+      <div class="resource-row">
+        <div class="res-icon"><i class="ti ti-book" aria-hidden="true"></i></div>
+        <div class="res-info"><p class="name">Meteorología para navegantes</p><p class="meta">William Crawford · Temas náuticos</p></div>
+        <span class="res-type">Libro</span>
+      </div>
+
+      <p class="slabel" style="margin-top:28px;">Podcasts</p>
+      <h2 class="stitle">Para escuchar navegando</h2>
+
+      <div class="resource-row">
+        <div class="res-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
+        <div class="res-info"><p class="name">Sailing Podcast · Around the World</p><p class="meta">Episodios semanales · EN</p></div>
+        <a class="res-link" href="#">Escuchar</a>
+      </div>
+      <div class="resource-row">
+        <div class="res-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
+        <div class="res-info"><p class="name">Pasión por la Vela</p><p class="meta">Podcast en español · regatistas y travesías</p></div>
+        <a class="res-link" href="#">Escuchar</a>
+      </div>
+      <div class="resource-row">
+        <div class="res-icon"><i class="ti ti-player-play" aria-hidden="true"></i></div>
+        <div class="res-info"><p class="name">The Sailing Scuttlebutt</p><p class="meta">Noticias y entrevistas · EN</p></div>
+        <a class="res-link" href="#">Escuchar</a>
+      </div>
+
+      <div class="tip-box">
+        <p class="tip-label">¿Querés sugerir un recurso?</p>
+        <p>Escribinos a navegacion@unc.edu.ar y lo sumamos a la lista.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 UNC · Navegación a Vela</p>
+    <div class="footer-links">
+      <a href="#">Instagram</a>
+      <a href="#">WhatsApp</a>
+      <a href="#">Contacto</a>
+    </div>
+  </footer>
+
+</div>
+<script>
+  function showTab(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
